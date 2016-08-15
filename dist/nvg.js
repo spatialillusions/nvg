@@ -1,3 +1,5 @@
+'use strict';
+
 var NVG = class {
 	constructor(input) {
 		this.document = 'nvg';
