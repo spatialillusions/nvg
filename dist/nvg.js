@@ -1,22 +1,36 @@
 var NVG = class {
-	constructor(xml) {
+	constructor(input) {
 		this.document = 'nvg';
 		this.items = [];
 		this.version = '2.0.2'
+		if (typeof input == "object"){
+			//do stuff with input object
+		}
+		if (typeof input == "string"){
+			//do stuff with input XML string
+		}
 	}
-	read(xml){console.log('reading')}
+	getItems(){ //returns all items
+		return this.items;
+	}
+	read(xml){
+		//parse XML string to JSON
+	}
 	toGeoJSON(){
-		//parse to GeoJSON
+		//parse this to GeoJSON
 	}
 	toXML(){
-		//parse to NVG XML
+		//parse this to NVG XML
 	}
 	
 };
 
 NVG.Text = class {
-	constructor(xml) {
+	constructor(x,y,content) {
 		this.drawable = 'text';
+		this.x = x;
+		this.y = y;
+		this.content = content;
 	}
 };
 
@@ -103,6 +117,9 @@ NVG.Group = class {
 		this.drawable = 'g';
 		this.items = [];
 	}
+	getItems(){
+		return this.items;
+	}
 };
 
 NVG.Composite = class {
@@ -110,9 +127,3 @@ NVG.Composite = class {
 		this.drawable = 'composite';
 	}
 };
-
-
-parser = new NVG();
-console.log(parser);
-parser.items.push(new NVG.Group)
-console.log(parser);
