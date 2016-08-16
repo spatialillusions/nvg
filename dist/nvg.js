@@ -27,105 +27,217 @@ var NVG = class {
 	
 };
 
-NVG.Text = class {
-	constructor(x,y,content) {
-		this.drawable = 'text';
-		this.x = x;
-		this.y = y;
-		this.content = content;
-	}
-};
-
-NVG.Point = class {
-	constructor(xml) {
-		this.drawable = 'point';
-	}
-};
-
-NVG.Multipoint = class {
-	constructor(xml) {
-		this.drawable = 'multipoint';
-	}
-};
-
-NVG.Circle = class {
-	constructor(xml) {
-		this.drawable = 'circle';
-	}
-};
-
-NVG.Ellipse = class {
-	constructor(xml) {
-		this.drawable = 'ellipse';
-	}
-};
-
-NVG.Rect = class {
-	constructor(xml) {
-		this.drawable = 'rect';
-	}
-};
-
-NVG.Polyline = class {
-	constructor(xml) {
-		this.drawable = 'polyline';
-	}
-};
-
-NVG.Arrow = class {
-	constructor(xml) {
-		this.drawable = 'arrow';
-	}
-};
-
-NVG.Corridor = class {
-	constructor(xml) {
-		this.drawable = 'corridor';
-	}
-};
-
-NVG.Orbit = class {
-	constructor(xml) {
-		this.drawable = 'orbit';
-	}
-};
-
-NVG.Polygon = class {
-	constructor(xml) {
-		this.drawable = 'polygon';
-	}
-};
 
 NVG.Arc = class {
-	constructor(xml) {
+	constructor(cx,cy,rx,ry,startangle,endangle, uri, properties) {
 		this.drawable = 'arc';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
 	}
 };
 
 NVG.Arcband = class {
-	constructor(xml) {
+	constructor(cx,cy,minr,maxr,startangle,endangle, uri, properties) {
 		this.drawable = 'arcband';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
 	}
 };
 
+NVG.Arrow = class {
+	constructor(width, points, uri, properties) {
+		this.drawable = 'arrow';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+		
+	}
+};
+
+NVG.Circle = class {
+	constructor(cx, cy, r, uri, properties) {
+		this.drawable = 'circle';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+		
+	}
+};
+
+NVG.Composite = class {
+	constructor(items, uri, properties) {
+		this.drawable = 'composite';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+	}
+};
+/*
 NVG.ContentItem = class {
-	constructor(xml) {
+	constructor(xml, uri) {
 		this.drawable = 'content-item';
+		this.uri = uri;
+	}
+};
+*/
+NVG.Corridor = class {
+	constructor(width, points, uri, properties) {
+		this.drawable = 'corridor';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+		
+	}
+};
+
+NVG.Ellipse = class {
+	constructor(cx,cy,rx,ry, uri, properties) {
+		this.drawable = 'ellipse';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+		
 	}
 };
 
 NVG.Group = class {
-	constructor(xml) {
+	constructor(items, properties) {
 		this.drawable = 'g';
-		this.items = [];
+		this.items = items;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
 	}
 	getItems(){
 		return this.items;
 	}
 };
 
-NVG.Composite = class {
-	constructor(xml) {
-		this.drawable = 'composite';
+NVG.Multipoint = class {
+	constructor(points, uri, properties) {
+		this.drawable = 'multipoint';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+		
+	}
+};
+
+NVG.Orbit = class {
+	constructor(width, points, uri, properties) {
+		this.drawable = 'orbit';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+	}
+};
+
+NVG.Point = class {
+	constructor(x, y, uri, properties) {
+		this.drawable = 'point';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+	}
+};
+
+NVG.Polygon = class {
+	constructor(points, uri, properties) {
+		this.drawable = 'polygon';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+	}
+};
+
+NVG.Polyline = class {
+	constructor(points, uri, properties) {
+		this.drawable = 'polyline';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}	
+	}
+};
+
+NVG.Rect = class {
+	constructor(cx,cy,rx,ry, uri, properties) {
+		this.drawable = 'rect';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
+	}
+};
+
+NVG.Text = class {
+	constructor(x,y,content,uri, properties) {
+		this.x = x;
+		this.y = y;
+		this.content = content;
+		
+		this.drawable = 'text';
+		this.uri = uri;
+		
+		if(properties){
+			for (key in properties){
+				this[key] = properties[key];
+			}
+		}
 	}
 };
