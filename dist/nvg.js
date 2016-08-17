@@ -5,18 +5,31 @@ var NVG = class {
 		this.document = 'nvg';
 		this.items = [];
 		this.version = '2.0.2'
-		if (typeof input == "object"){
+		if (typeof input == 'string'){
 			//do stuff with input object
-		}
-		if (typeof input == "string"){
-			//do stuff with input XML string
+			try {
+				input = JSON.parse(input);
+				for (var key in input){
+					this[key] = input[key];
+				}
+			}catch (e) {
+				//So parse as JSON failed, try to parse it as xml
+				this.parseXML(input);
+			}	
 		}
 	}
 	getItems(){ //returns all items
 		return this.items;
 	}
-	read(xml){
+	parseXML(xml){
 		//parse XML string to JSON
+		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
+		if(xml.firstChild.nodeName == 'nvg:nvg'){//check that we actually are parsing NVG
+			this.version = xml.firstChild.getAttribute('version');
+			
+			//console.log()
+		}
+		
 	}
 	toGeoJSON(){
 		//parse this to GeoJSON
