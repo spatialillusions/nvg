@@ -18,6 +18,9 @@ var NVG = class {
 			}	
 		}
 	}
+	add(item){
+		this.items.push(item);
+	}
 	getItems(){ //returns all items
 		return this.items;
 	}
@@ -26,6 +29,29 @@ var NVG = class {
 		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
 		if(xml.firstChild.nodeName == 'nvg:nvg'){//check that we actually are parsing NVG
 			this.version = xml.firstChild.getAttribute('version');
+			var nodes = xml.firstChild.childNodes;
+			for (var i = 0; i < nodes.length; i++){
+				if(nodes[i].nodeType == 1){
+					var item = {};
+					item.drawable = nodes[i].nodeName.split(':')[1];
+					// TODO Add code for creating class objects for each item type				
+					Array.prototype.slice.call(nodes[i].attributes).forEach(function(attr) {
+						if (attr.name == 'modifiers' || attr.name == 'style') {
+							item[attr.name] = {};
+							var attr_list = attr.value.trim().split(';');
+							for (var j = 0; j < attr_list.length; j++){
+								if(attr_list[j]){
+									var s = attr_list[j].split(':');
+									item[attr.name][s[0].trim()] = s[1].trim();
+								}
+							}
+						}else{
+    						item[attr.name] = isNaN(Number(attr.value))?attr.value:Number(attr.value);
+						}
+					});
+					this.add(item);
+				}
+			}
 			
 			//console.log()
 		}
@@ -40,7 +66,7 @@ var NVG = class {
 	
 };
 
-
+/*
 NVG.Arc = class {
 	constructor(cx,cy,rx,ry,startangle,endangle, uri, properties) {
 		this.drawable = 'arc';
@@ -107,6 +133,7 @@ NVG.Composite = class {
 		}
 	}
 };
+*/
 /*
 NVG.ContentItem = class {
 	constructor(xml, uri) {
@@ -115,6 +142,7 @@ NVG.ContentItem = class {
 	}
 };
 */
+/*
 NVG.Corridor = class {
 	constructor(width, points, uri, properties) {
 		this.drawable = 'corridor';
@@ -253,4 +281,4 @@ NVG.Text = class {
 			}
 		}
 	}
-};
+};*/
