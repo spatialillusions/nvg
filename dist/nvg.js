@@ -42,7 +42,7 @@ var NVG = class {
 							for (var j = 0; j < attr_list.length; j++){
 								if(attr_list[j]){
 									var s = attr_list[j].split(':');
-									item[attr.name][s[0].trim()] = s[1].trim();
+									if(s[0] && s[1])item[attr.name][s[0].trim()] = s[1].trim();
 								}
 							}
 						}else{
