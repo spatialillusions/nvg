@@ -52,10 +52,7 @@ var NVG = class {
 					this.add(item);
 				}
 			}
-			
-			//console.log()
-		}
-		
+		}		
 	}
 	toGeoJSON(){
 		//parse this to GeoJSON
