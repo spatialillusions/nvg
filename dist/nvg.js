@@ -27,7 +27,7 @@ var NVG = class {
 	parseXML(xml){
 		//parse XML string to JSON
 		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
-		if(xml.firstChild.nodeName == 'nvg:nvg'){//check that we actually are parsing NVG
+		if(xml.firstChild.nodeName.split(':')[1] == 'nvg'){//check that we actually are parsing NVG but ignore namespace
 			this.version = xml.firstChild.getAttribute('version');
 			var nodes = xml.firstChild.childNodes;
 			for (var i = 0; i < nodes.length; i++){
