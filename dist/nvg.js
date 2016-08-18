@@ -45,9 +45,21 @@ var NVG = class {
 									if(s[0] && s[1])item[attr.name][s[0].trim()] = s[1].trim();
 								}
 							}
-						}else{
-    						item[attr.name] = isNaN(Number(attr.value))?attr.value:Number(attr.value);
+						return;
 						}
+						if (attr.name == 'points') {
+							item[attr.name] = [];
+							var attr_list = attr.value.trim().split(' ');
+							for (var j = 0; j < attr_list.length; j++){
+								if(attr_list[j]){
+									var s = attr_list[j].split(',');
+									if(s[0] && s[1])item[attr.name].push([Number(s[0]),Number(s[1])]);
+								}
+							}
+						return;
+						}
+    					item[attr.name] = isNaN(Number(attr.value))?attr.value:Number(attr.value);
+						
 					});
 					this.add(item);
 				}
