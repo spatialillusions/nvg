@@ -2,7 +2,7 @@
 <script src="../dist/nvg.js"></script>
 <body onload="document.getElementById('files').addEventListener('change', loadFileAsText, false)">
 <input type="file" id="files" name="files[]"><br>
-<textarea rows="15" cols="50" id="nvg_json">
+<textarea rows="20" cols="70" id="nvg_json">
 </textarea>
 
 <script>
@@ -12,7 +12,7 @@ function loadFileAsText (evt) {
 	fileReader.onload = function(fileLoadedEvent) {
 		var file = fileLoadedEvent.target.result;
 		var parser = new NVG(file);
-		document.getElementById('nvg_json').value = JSON.stringify(parser);
+		document.getElementById('nvg_json').value = JSON.stringify(parser, null, 4);
 		//orbat.render();
 	};
 	fileReader.readAsText(fileToLoad, "UTF-8");
