@@ -30,25 +30,9 @@ var NVG = class {
 			for (var i = 0; i < nodes.length; i++){
 				var node = nodes[i];
 				if(node.nodeType == 1){
-					var nodeName = node.nodeName.split(':')[1].toLowerCase();
-					if (nodeName == 'textinfo'){
-						current[nodeName] = nodes[i].textContent;
-					}
-					if (nodeName == 'simplefield'){
-						if (!current.hasOwnProperty(nodeName)){
-							current[nodeName] = [];
+					var nodeName = node.nodeName.split(':')[1];
 						}
-						var field = {};
-						nodeAttibutes(node, field);
-						current[nodeName].push(field);
-					}
-					if (nodeName == 'extendeddata'){
-						if (!current.hasOwnProperty(nodeName)){
-							current[nodeName] = {};
-							current[nodeName].simpledata = [];
 						}
-						nodeAttibutes(node, current[nodeName]);
-						parseSubNodes(node.childNodes, current[nodeName]);
 					}
 				}
 			}
