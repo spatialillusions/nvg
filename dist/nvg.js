@@ -26,14 +26,16 @@ var NVG = class {
 	}
 	parseXML(xml){
 		//parse XML string to JSON
-		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
-		if(xml.firstChild.nodeName.split(':')[1] == 'nvg'){//check that we actually are parsing NVG but ignore namespace
-			this.version = xml.firstChild.getAttribute('version');
-			var nodes = xml.firstChild.childNodes;
+		function parseSubNodes(nodes, items){
 			for (var i = 0; i < nodes.length; i++){
 				if(nodes[i].nodeType == 1){
 					var item = {};
+					// TODO, only set drawable for drawables...
 					item.drawable = nodes[i].nodeName.split(':')[1];
+					
+					if(item.drawable == 'g' || item.drawable == 'composite'){
+						item.items = parseSubNodes(nodes[i].childNodes, []);
+					}
 					// TODO Add code for creating class objects for each item type				
 					Array.prototype.slice.call(nodes[i].attributes).forEach(function(attr) {
 						if (attr.name == 'modifiers' || attr.name == 'style') {
@@ -61,9 +63,17 @@ var NVG = class {
     					item[attr.name] = isNaN(Number(attr.value))?attr.value:Number(attr.value);
 						
 					});
-					this.add(item);
+					items.push(item);
 				}
 			}
+			return items;
+		}
+		
+		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
+		if(xml.firstChild.nodeName.split(':')[1] == 'nvg'){//check that we actually are parsing NVG but ignore namespace
+			this.version = xml.firstChild.getAttribute('version');
+			var nodes = xml.firstChild.childNodes;
+			this.items = parseSubNodes(nodes, []);	
 		}		
 	}
 	toGeoJSON(){
