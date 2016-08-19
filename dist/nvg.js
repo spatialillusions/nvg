@@ -26,54 +26,107 @@ var NVG = class {
 	}
 	parseXML(xml){
 		//parse XML string to JSON
-		function parseSubNodes(nodes, items){
+		function tagAttributes(nodes, current){
 			for (var i = 0; i < nodes.length; i++){
-				if(nodes[i].nodeType == 1){
-					var item = {};
-					// TODO, only set drawable for drawables...
-					item.drawable = nodes[i].nodeName.split(':')[1];
-					
-					if(item.drawable == 'g' || item.drawable == 'composite'){
-						item.items = parseSubNodes(nodes[i].childNodes, []);
+				var node = nodes[i];
+				if(node.nodeType == 1){
+					var nodeName = node.nodeName.split(':')[1].toLowerCase();
+					if (nodeName == 'textinfo'){
+						current[nodeName] = nodes[i].textContent;
 					}
-					// TODO Add code for creating class objects for each item type				
-					Array.prototype.slice.call(nodes[i].attributes).forEach(function(attr) {
-						if (attr.name == 'modifiers' || attr.name == 'style') {
-							item[attr.name] = {};
-							var attr_list = attr.value.trim().split(';');
-							for (var j = 0; j < attr_list.length; j++){
-								if(attr_list[j]){
-									var s = attr_list[j].split(':');
-									if(s[0] && s[1])item[attr.name][s[0].trim()] = isNaN(Number(s[1].trim()))?s[1].trim():Number(s[1].trim());
-								}
-							}
-						return;
+					if (nodeName == 'simplefield'){
+						if (!current.hasOwnProperty(nodeName)){
+							current[nodeName] = [];
 						}
-						if (attr.name == 'points') {
-							item[attr.name] = [];
-							var attr_list = attr.value.trim().split(' ');
-							for (var j = 0; j < attr_list.length; j++){
-								if(attr_list[j]){
-									var s = attr_list[j].split(',');
-									if(s[0] && s[1])item[attr.name].push([Number(s[0]),Number(s[1])]);
-								}
-							}
-						return;
+						var field = {};
+						nodeAttibutes(node, field);
+						current[nodeName].push(field);
+					}
+					if (nodeName == 'extendeddata'){
+						if (!current.hasOwnProperty(nodeName)){
+							current[nodeName] = {};
+							current[nodeName].simpledata = [];
 						}
-    					item[attr.name] = isNaN(Number(attr.value))?attr.value:Number(attr.value);
-						
-					});
-					items.push(item);
+						nodeAttibutes(node, current[nodeName]);
+						parseSubNodes(node.childNodes, current[nodeName]);
+					}
 				}
 			}
-			return items;
+		}
+		function nodeAttibutes(node, current){
+			Array.prototype.slice.call(node.attributes).forEach(function(attr) {
+				if (attr.name == 'modifiers' || attr.name == 'style') {
+					current[attr.name] = {};
+					var attr_list = attr.value.trim().split(';');
+					for (var j = 0; j < attr_list.length; j++){
+						if(attr_list[j]){
+							var s = attr_list[j].split(':');
+							if(s[0] && s[1])current[attr.name][s[0].trim()] = isNaN(Number(s[1].trim()))?s[1].trim():Number(s[1].trim());
+						}
+					}
+				return;
+				}
+				if (attr.name == 'points') {
+					current[attr.name] = [];
+					var attr_list = attr.value.trim().split(' ');
+					for (var j = 0; j < attr_list.length; j++){
+						if(attr_list[j]){
+							var s = attr_list[j].split(',');
+							if(s[0] && s[1])current[attr.name].push([Number(s[0]),Number(s[1])]);
+						}
+					}
+				return;
+				}
+				current[attr.name] = isNaN(Number(attr.value))?attr.value:Number(attr.value);
+			});
+		}
+		function parseSubNodes(nodes, current){
+			for (var i = 0; i < nodes.length; i++){
+				var node = nodes[i];
+				if(node.nodeType == 1){
+					var nodeName = node.nodeName.split(':')[1].toLowerCase();
+					if (['extendeddata','extension','metadata','schema','simpledata','simplefield'].lastIndexOf(nodeName) != -1){
+						if (nodeName == 'simpledata'){
+							var simpledata = {};
+							nodeAttibutes(node, simpledata);
+							simpledata.value = node.textContent;
+							current.simpledata.push(simpledata);
+						}else{
+							current[nodeName] = {};
+							nodeAttibutes(node, current[nodeName]);
+							tagAttributes(node.childNodes, current[nodeName]);
+						}
+					}else{
+						var item = {};
+						nodeAttibutes(node, item);
+						item.drawable = nodeName;
+						
+						if(node.childNodes.length){
+							tagAttributes(node.childNodes, item);
+						}
+						if(item.drawable == 'g' || item.drawable == 'composite'){
+							item.items = [];
+							parseSubNodes(node.childNodes, item);
+						}
+						
+						// TODO Add code for creating class objects for each item type	
+						current.items.push(item);					
+					}
+				}
+			}
+			//return items;
 		}
 		
 		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
 		if(xml.firstChild.nodeName.split(':')[1] == 'nvg'){//check that we actually are parsing NVG but ignore namespace
-			this.version = xml.firstChild.getAttribute('version');
+			this.version = xml.firstChild.getAttribute('version'); 
+			this.items = [];
 			var nodes = xml.firstChild.childNodes;
-			this.items = parseSubNodes(nodes, []);	
+			// This find all items
+			//this.items =
+			parseSubNodes(nodes, this);
+			// This looks for other data			
+				
 		}		
 	}
 	toGeoJSON(){
