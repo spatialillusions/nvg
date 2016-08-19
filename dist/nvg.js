@@ -31,7 +31,38 @@ var NVG = class {
 				var node = nodes[i];
 				if(node.nodeType == 1){
 					var nodeName = node.nodeName.split(':')[1];
+					if (nodeName){
+						nodeName = nodeName.toLowerCase();
+						if(['arcband-ring','circular-ring','elliptic-ring','linear-ring','rect-ring'].lastIndexOf(nodeName) != -1){
+							var exclude = {};
+							exclude.drawable = nodeName.replace('-','');
+							nodeAttibutes(node, exclude);
+							current.push(exclude);
 						}
+						if (nodeName == 'exclude'){
+							if (!current.hasOwnProperty(nodeName)){
+								current['exclusion'] = [];
+							}
+							tagAttributes(node.childNodes, current['exclusion'])
+						}
+						if (nodeName == 'extendeddata'){
+							if (!current.hasOwnProperty(nodeName)){
+								current[nodeName] = {};
+								current[nodeName].simpledata = [];
+							}
+							nodeAttibutes(node, current[nodeName]);
+							parseSubNodes(node.childNodes, current[nodeName]);
+						}
+						if (nodeName == 'textinfo'){
+							current[nodeName] = nodes[i].textContent;
+						}
+						if (nodeName == 'simplefield'){
+							if (!current.hasOwnProperty(nodeName)){
+								current[nodeName] = [];
+							}
+							var field = {};
+							nodeAttibutes(node, field);
+							current[nodeName].push(field);
 						}
 					}
 				}
@@ -70,6 +101,9 @@ var NVG = class {
 				if(node.nodeType == 1){
 					var nodeName = node.nodeName.split(':')[1].toLowerCase();
 					if (['extendeddata','extension','metadata','schema','simpledata','simplefield'].lastIndexOf(nodeName) != -1){
+						
+						// add schema handeling
+						
 						if (nodeName == 'simpledata'){
 							var simpledata = {};
 							nodeAttibutes(node, simpledata);
@@ -92,7 +126,8 @@ var NVG = class {
 							item.items = [];
 							parseSubNodes(node.childNodes, item);
 						}
-						
+						console.log(current)
+						console.log(item)
 						// TODO Add code for creating class objects for each item type	
 						current.items.push(item);					
 					}
