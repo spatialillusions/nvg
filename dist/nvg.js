@@ -27,9 +27,7 @@ var NVG = class {
 			for (var i = 0; i < nodes.length; i++){
 				var node = nodes[i];
 				var nodeName = node.nodeName.split(':')[1];
-				if(node.nodeType == 1 && nodeName &&
-				//Do not try to get drawables as attributes
-				['arc','arcband','arrow','circle','composite','content-item','corridor','ellipse','g','multipoint','orbit','point','polygon','polyline','rect','text'].lastIndexOf(nodeName) == -1){
+				if(node.nodeType == 1 && nodeName){
 					nodeName = nodeName.toLowerCase();
 					switch (nodeName) {
 						case 'begin':
@@ -89,7 +87,10 @@ var NVG = class {
 							current.push(exclude);
 							break;
 						default:
-							console.log('TODO tagAttributes default: ' + nodeName);	
+							//Debug logging, remove later
+							if(['arc','arcband','arrow','circle','composite','content-item','corridor','ellipse','g','multipoint','orbit','point','polygon','polyline','rect','text'].lastIndexOf(nodeName) == -1){
+								console.log('TODO tagAttributes default: ' + nodeName);	
+							}
 					}
 				}
 			}
