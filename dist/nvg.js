@@ -18,9 +18,6 @@ var NVG = class {
 			}	
 		}
 	}
-	add(item){
-		this.items.push(item);
-	}
 	getItems(){ //returns all items
 		return this.items;
 	}
@@ -29,41 +26,70 @@ var NVG = class {
 		function tagAttributes(nodes, current){
 			for (var i = 0; i < nodes.length; i++){
 				var node = nodes[i];
-				if(node.nodeType == 1){
-					var nodeName = node.nodeName.split(':')[1];
-					if (nodeName){
-						nodeName = nodeName.toLowerCase();
-						if(['arcband-ring','circular-ring','elliptic-ring','linear-ring','rect-ring'].lastIndexOf(nodeName) != -1){
-							var exclude = {};
-							exclude.drawable = nodeName.replace('-','');
-							nodeAttibutes(node, exclude);
-							current.push(exclude);
-						}
-						if (nodeName == 'exclude'){
+				var nodeName = node.nodeName.split(':')[1];
+				if(node.nodeType == 1 && nodeName &&
+				//Do not try to get drawables as attributes
+				['arc','arcband','arrow','circle','composite','content-item','corridor','ellipse','g','multipoint','orbit','point','polygon','polyline','rect','text'].lastIndexOf(nodeName) == -1){
+					nodeName = nodeName.toLowerCase();
+					switch (nodeName) {
+						case 'begin':
+							current[nodeName] = node.textContent;
+							break;
+						case 'end':
+							current[nodeName] = node.textContent;
+							break;
+						case 'content':
+							current[nodeName] = node.textContent;
+							break;
+						case 'exclude':
 							if (!current.hasOwnProperty(nodeName)){
-								current['exclusion'] = [];
+								current.exclusion = [];
 							}
-							tagAttributes(node.childNodes, current['exclusion'])
-						}
-						if (nodeName == 'extendeddata'){
+							tagAttributes(node.childNodes, current.exclusion);
+							break;
+						case 'extendeddata':
 							if (!current.hasOwnProperty(nodeName)){
 								current[nodeName] = {};
 								current[nodeName].simpledata = [];
 							}
 							nodeAttibutes(node, current[nodeName]);
 							parseSubNodes(node.childNodes, current[nodeName]);
-						}
-						if (nodeName == 'textinfo'){
-							current[nodeName] = nodes[i].textContent;
-						}
-						if (nodeName == 'simplefield'){
+							break;
+						case 'extension':
+							console.log('TODO tagAttributes: '  + nodeName);
+							// TODO How to handle extended data
+							current[nodeName] = [];//this is for node 
+							break;
+						case 'textinfo':
+							current[nodeName] = node.textContent;
+							break;
+						case 'timespan':
+							current[nodeName] = {};
+							tagAttributes(node.childNodes, current[nodeName]);
+							break;
+						case 'timestamp':
+							current[nodeName] = node.textContent;
+							break;
+						case 'simplefield':
 							if (!current.hasOwnProperty(nodeName)){
 								current[nodeName] = [];
 							}
 							var field = {};
 							nodeAttibutes(node, field);
 							current[nodeName].push(field);
-						}
+							break;
+						case 'arcband-ring':
+						case 'circular-ring':
+						case 'elliptic-ring':
+						case 'linear-ring':
+						case 'rect-ring':
+							var exclude = {};
+							exclude.drawable = nodeName.replace('-','');
+							nodeAttibutes(node, exclude);
+							current.push(exclude);
+							break;
+						default:
+							console.log('TODO tagAttributes default: ' + nodeName);	
 					}
 				}
 			}
@@ -100,22 +126,57 @@ var NVG = class {
 				var node = nodes[i];
 				if(node.nodeType == 1){
 					var nodeName = node.nodeName.split(':')[1].toLowerCase();
-					if (['extendeddata','extension','metadata','schema','simpledata','simplefield'].lastIndexOf(nodeName) != -1){
+					var item = {};
+					if (['extendeddata','extension','metadata','schema','section','simpledata','simplefield'].lastIndexOf(nodeName) != -1){			
 						
-						// add schema handeling
-						
-						if (nodeName == 'simpledata'){
-							var simpledata = {};
-							nodeAttibutes(node, simpledata);
-							simpledata.value = node.textContent;
-							current.simpledata.push(simpledata);
-						}else{
-							current[nodeName] = {};
-							nodeAttibutes(node, current[nodeName]);
-							tagAttributes(node.childNodes, current[nodeName]);
+						switch (nodeName) {
+							case 'extendeddata':
+								current[nodeName] = item;
+								nodeAttibutes(node, item);
+								tagAttributes(node.childNodes, item);
+								break;
+							case 'extension':
+								console.log('TODO parsesubnodes: ' + nodeName)
+								// TODO How to handle extended data
+								current[nodeName] = [];//this is for root level
+								break;
+							case 'metadata':
+								console.log('TODO parsesubnodes: ' + nodeName)
+								// TODO How to handle metadata data
+								current[nodeName] = item;
+								break;
+							case 'schema':
+								if (!current.hasOwnProperty(nodeName)){
+									current[nodeName] = [];
+								}
+								current[nodeName].push(item);
+								nodeAttibutes(node, item);
+								tagAttributes(node.childNodes, item);
+								break;
+							case 'section':
+								if (!current.hasOwnProperty('simpledatasection')){
+									current.simpledatasection = [];
+								}
+								current.simpledatasection.push(item);
+								nodeAttibutes(node, item);
+								item.simpledata = [];
+								parseSubNodes(node.childNodes, item);
+								break;
+							case 'simpledata':
+								nodeAttibutes(node, item);
+								item.value = node.textContent;
+								current.simpledata.push(item);
+								tagAttributes(node.childNodes, item);
+								break;
+							case 'simplefield':
+								current[nodeName] = item;
+								nodeAttibutes(node, item);
+								tagAttributes(node.childNodes, item);
+								break;
+							default:
+								console.log('TODO parsesubnodes default: ' + nodeName)
 						}
-					}else{
-						var item = {};
+					}else{ //This is all drawables
 						nodeAttibutes(node, item);
 						item.drawable = nodeName;
 						
@@ -126,14 +187,10 @@ var NVG = class {
 							item.items = [];
 							parseSubNodes(node.childNodes, item);
 						}
-						console.log(current)
-						console.log(item)
-						// TODO Add code for creating class objects for each item type	
 						current.items.push(item);					
 					}
 				}
 			}
-			//return items;
 		}
 		
 		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
@@ -141,11 +198,7 @@ var NVG = class {
 			this.version = xml.firstChild.getAttribute('version'); 
 			this.items = [];
 			var nodes = xml.firstChild.childNodes;
-			// This find all items
-			//this.items =
-			parseSubNodes(nodes, this);
-			// This looks for other data			
-				
+			parseSubNodes(nodes, this);				
 		}		
 	}
 	toGeoJSON(){
