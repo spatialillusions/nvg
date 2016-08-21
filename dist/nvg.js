@@ -26,7 +26,12 @@ var NVG = class {
 		function tagAttributes(nodes, current){
 			for (var i = 0; i < nodes.length; i++){
 				var node = nodes[i];
-				var nodeName = node.nodeName.split(':')[1];
+				var nodeName = node.nodeName.split(':');
+				if(nodeName[0] == 'dc' || nodeName[0] == 'dcterms'){
+					nodeName = nodeName[0];
+				}else{
+					nodeName = nodeName[1];
+				}
 				if(node.nodeType == 1 && nodeName){
 					nodeName = nodeName.toLowerCase();
 					switch (nodeName) {
@@ -35,6 +40,10 @@ var NVG = class {
 							break;
 						case 'end':
 							current[nodeName] = node.textContent;
+							break;
+						case 'dc':
+						case 'dcterms':
+							current[node.nodeName] = node.textContent;
 							break;
 						case 'content':
 							current[nodeName] = node.textContent;
@@ -57,6 +66,10 @@ var NVG = class {
 							console.log('TODO tagAttributes: '  + nodeName);
 							// TODO How to handle extended data
 							current[nodeName] = [];//this is for node 
+							break;
+						case 'metadata':
+							current[nodeName] = {};
+							tagAttributes(node.childNodes, current[nodeName]);
 							break;
 						case 'textinfo':
 							current[nodeName] = node.textContent;
