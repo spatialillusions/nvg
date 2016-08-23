@@ -230,6 +230,11 @@ var NVG = class {
 					}
 				}
 				switch (item.drawable) {
+					case 'multipoint':
+						feature.geometry = {"type": "MultiPoint"};
+						feature.geometry.coordinates = item.points;
+						delete feature.properties.points;
+						break;
 					case 'point':
 						feature.geometry = {"type": "Point"};
 						feature.geometry.coordinates = [item.x, item.y];
