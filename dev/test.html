@@ -2,9 +2,12 @@
 <script src="../dist/nvg.js"></script>
 <body onload="document.getElementById('files').addEventListener('change', loadFileAsText, false)">
 Select NVG XML file: <input type="file" id="files" name="files[]"><br>
+NVG JSON according to NVG JSON specification: <i>new NVG(file)</i><br>
 <textarea rows="20" cols="70" id="nvg_json">
-</textarea>
-
+</textarea><br>
+NVG GeoJSON according to GeoJSON specification:  <i>toGeoJSON()</i><br>
+<textarea rows="20" cols="70" id="nvg_geojson">
+</textarea><br>
 <script>
 function loadFileAsText (evt) {
 	var fileToLoad = evt.target.files[0];
@@ -13,18 +16,10 @@ function loadFileAsText (evt) {
 		var file = fileLoadedEvent.target.result;
 		var parser = new NVG(file);
 		document.getElementById('nvg_json').value = JSON.stringify(parser, null, 4);
-		//orbat.render();
+		document.getElementById('nvg_geojson').value = JSON.stringify(parser.toGeoJSON(), null, 4);
 	};
 	fileReader.readAsText(fileToLoad, "UTF-8");
 }
-//var str = '{"document": "nvg","items": [ {"cx": -77.03,"cy": 32.19, "drawable": "arc","endangle": 5.0,"label": "Styled arc", "rx": 500.0,"ry": 800.0,"startangle": 315.0,"style": {"stroke": "#00ff00","stroke-dash": "none","stroke-width": 5},"textinfo": "Example arc for documentation.","uri": "urn:md5:1e2dac19cac7c3fe754dab240e4baa34"} ],"version": "2.0.2"}'
-var str = '<?xml version="1.0" encoding="UTF-8"?><nvg:nvg  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nvg="https://tide.act.nato.int/schemas/2012/10/nvg"   xsi:schemaLocation="https://tide.act.nato.int/schemas/2012/10/nvg ../../Schemas/nvg.2.0.xsd"  version="2.0.0">    <nvg:arc            label="Styled arc"            uri="urn:md5:1e2dac19cac7c3fe754dab240e4baa34"            cx="-77.03" cy="32.19"            rx="500" ry="800"            startangle="315" endangle="5"            style="stroke:#00ff00;stroke-width:5;stroke-dash:none;">        <nvg:textInfo>Example arc for documentation.</nvg:textInfo>    </nvg:arc></nvg:nvg>';
-//var str = 'this si error';
-//var parser = new NVG(str);
-//console.log(parser);
-
-//parser.items.push(new NVG.Group())
-//console.log(parser);
 </script>
 
 
