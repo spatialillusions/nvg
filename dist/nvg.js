@@ -217,6 +217,42 @@ var NVG = class {
 	}
 	toGeoJSON(){
 		//parse this to GeoJSON
+		function items2features(items){
+			var features = [];
+			for (var i = 0; i < items.length; i++){
+				var item = items[i];
+				var feature = { "type": "Feature", "properties" : {}};
+				for (var key in item){
+					if(key == 'uri'){
+						feature.id = item.uri;
+					}else{
+						feature.properties[key] = item[key];
+					}
+				}
+				switch (item.drawable) {
+					case 'point':
+						feature.geometry = {"type": "Point"};
+						feature.geometry.coordinates = [item.x, item.y];
+						break;
+					default:
+						console.log('TODO parse item default: ' + item.drawable)
+				}
+				features.push(feature);
+			}
+			return features;
+		}
+		
+		var geoJSON = {};
+		geoJSON.type = 'FeatureCollection';
+		for (var key in this){
+			if(key == 'items'){
+				geoJSON.features = items2features(this.items);
+			}else{
+				geoJSON[key] = this[key];
+			}
+		}
+		
+		return geoJSON;
 	}
 	toXML(){
 		//parse this to NVG XML
