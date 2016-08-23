@@ -230,6 +230,16 @@ var NVG = class {
 					}
 				}
 				switch (item.drawable) {
+					case 'composite':
+						feature.geometry = {"type": "GeometryCollection"};
+						feature.geometries = items2features(item.items);
+						delete feature.properties.items;
+						break;
+					case 'g':
+						feature.geometry = {"type": "GeometryCollection"};
+						feature.geometries = items2features(item.items);
+						delete feature.properties.items;
+						break;
 					case 'multipoint':
 						feature.geometry = {"type": "MultiPoint"};
 						feature.geometry.coordinates = item.points;
