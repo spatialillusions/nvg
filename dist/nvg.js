@@ -259,6 +259,10 @@ var NVG = class {
 						feature.geometry.coordinates = item.points;
 						delete feature.properties.points;
 						break;
+					case 'text':
+						feature.geometry = {"type": "Point"};
+						feature.geometry.coordinates = [item.x, item.y];
+						break;
 					default:
 						console.log('TODO parse item default: ' + item.drawable)
 				}
