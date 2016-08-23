@@ -234,6 +234,16 @@ var NVG = class {
 						feature.geometry = {"type": "Point"};
 						feature.geometry.coordinates = [item.x, item.y];
 						break;
+					case 'polygon':
+						feature.geometry = {"type": "Polygon"};
+						feature.geometry.coordinates = [item.points];
+						delete feature.properties.points;
+						break;
+					case 'polyline':
+						feature.geometry = {"type": "LineString"};
+						feature.geometry.coordinates = item.points;
+						delete feature.properties.points;
+						break;
 					default:
 						console.log('TODO parse item default: ' + item.drawable)
 				}
