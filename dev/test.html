@@ -8,6 +8,37 @@ NVG JSON according to NVG JSON specification: <i>new NVG(file)</i><br>
 NVG GeoJSON according to GeoJSON specification:  <i>toGeoJSON()</i><br>
 <textarea rows="20" cols="70" id="nvg_geojson">
 </textarea><br>
+
+<link rel="stylesheet" href="http://openlayers.org/en/v3.17.1/css/ol.css" type="text/css">
+<script src="http://openlayers.org/en/v3.17.1/build/ol.js"></script>
+And put it on a simple Open Layers map:<br>
+<div id="map" class="map" style="width: 520px; height: 300px;"></div>
+<script>
+var vectorSource = new ol.source.Vector();
+var vectorLayer = new ol.layer.Vector({
+	source: vectorSource
+});
+
+var map = new ol.Map({
+	layers: [
+		new ol.layer.Tile({
+			source: new ol.source.OSM()
+		}),
+		vectorLayer
+	],
+	target: 'map',
+	controls: ol.control.defaults({
+		attributionOptions: ({
+			collapsible: false
+		})
+	}),
+	view: new ol.View({
+		center: [0, 0],
+		zoom: 2
+	})
+});
+</script>   
+    
 <script>
 function loadFileAsText (evt) {
 	var fileToLoad = evt.target.files[0];
@@ -17,6 +48,12 @@ function loadFileAsText (evt) {
 		var parser = new NVG(file);
 		document.getElementById('nvg_json').value = JSON.stringify(parser, null, 4);
 		document.getElementById('nvg_geojson').value = JSON.stringify(parser.toGeoJSON(), null, 4);
+		
+		vectorSource.clear();
+		vectorSource.addFeatures((new ol.format.GeoJSON()).readFeatures(parser.toGeoJSON(),{featureProjection:ol.proj.get('EPSG:3857')}));
+        var extent = vectorSource.getExtent();
+		map.getView().fit(extent, map.getSize());
+		
 	};
 	fileReader.readAsText(fileToLoad, "UTF-8");
 }
