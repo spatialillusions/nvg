@@ -230,10 +230,40 @@ var NVG = class {
 					}
 				}
 				switch (item.drawable) {
+					case 'arc':
+						feature.geometry = {"type": "LineString"};
+						//feature.geometries = items2features(item.items);
+						//create line
+						break;
+					case 'arcband':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
+						break;
+					case 'arrow':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
+						break;
+					case 'circle':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
+						break;
 					case 'composite':
 						feature.geometry = {"type": "GeometryCollection"};
 						feature.geometries = items2features(item.items);
 						delete feature.properties.items;
+						break;
+					case 'corridor':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
+						break;
+					case 'ellipse':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
 						break;
 					case 'g':
 						feature.geometry = {"type": "GeometryCollection"};
@@ -244,6 +274,11 @@ var NVG = class {
 						feature.geometry = {"type": "MultiPoint"};
 						feature.geometry.coordinates = item.points;
 						delete feature.properties.points;
+						break;
+					case 'orbit':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
 						break;
 					case 'point':
 						feature.geometry = {"type": "Point"};
@@ -258,6 +293,11 @@ var NVG = class {
 						feature.geometry = {"type": "LineString"};
 						feature.geometry.coordinates = item.points;
 						delete feature.properties.points;
+						break;
+					case 'rect':
+						feature.geometry = {"type": "Polygon"};
+						//feature.geometries = items2features(item.items);
+						//create polygon
 						break;
 					case 'text':
 						feature.geometry = {"type": "Point"};
