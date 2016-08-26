@@ -323,7 +323,9 @@ var NVG = class {
 						console.log('TODO parse item default: ' + item.drawable)
 				}
 				if(geometrycollection){
-					//If this is part of a geometry collection we can't have a normal feature
+					// If this is part of a geometry collection we can't have a normal feature
+					// I know this is not according to GeoJSON specification, but lets try to 
+					// keep all attributes in some way
 					if(feature.id)feature.geometry.id = feature.id;
 					feature.geometry.properties = feature.properties;					
 					features.push(feature.geometry);
