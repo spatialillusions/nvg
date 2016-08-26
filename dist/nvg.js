@@ -245,41 +245,49 @@ var NVG = class {
 				}
 				switch (item.drawable) {
 					case 'arc':
-						feature.geometry = {"type": "LineString"};
+						//feature.geometry = {"type": "LineString"};
 						// TODO: create line
 						break;
 					case 'arcband':
-						feature.geometry = {"type": "Polygon"};
+						//feature.geometry = {"type": "Polygon"};
 						// TODO: create polygon
 						break;
 					case 'arrow':
-						feature.geometry = {"type": "Polygon"};
+						//feature.geometry = {"type": "Polygon"};
 						// TODO: create polygon
 						break;
 					case 'circle':
 						feature.geometry = {"type": "Polygon"};
 						feature.geometry.coordinates = [[]];
-						for (var i = 0; i <= 360; i++){
-							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.r, i));
+						for (var j = 360; j >= 0; j--){
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.r, j));
 						}
 						break;
 					case 'composite':
-						feature.geometry = {"type": "GeometryCollection"};
-						feature.geometry.geometries = items2features(item.items, true);
-						delete feature.properties.items;
+						//Flatten composites at the moment
+						var subfeatures = items2features(item.items, true);
+						for (key in subfeatures){
+							subfeatures[key].properties.parent = {};//feature.properties;
+							if(item.uri)subfeatures[key].properties.parent.uri = item.uri;
+							features.push(subfeatures[key]);
+						}
 						break;
 					case 'corridor':
-						feature.geometry = {"type": "Polygon"};
+						//feature.geometry = {"type": "Polygon"};
 						// TODO: create polygon
 						break;
 					case 'ellipse':
-						feature.geometry = {"type": "Polygon"};
+						//feature.geometry = {"type": "Polygon"};
 						// TODO: create polygon
 						break;
 					case 'g':
-						feature.geometry = {"type": "GeometryCollection"};
-						feature.geometry.geometries = items2features(item.items, true);
-						delete feature.properties.items;
+						//Flatten groups
+						var subfeatures = items2features(item.items, true);
+						for (key in subfeatures){
+							subfeatures[key].properties.parent = {};//feature.properties;
+							if(item.uri)subfeatures[key].properties.parent.uri = item.uri;
+							features.push(subfeatures[key]);
+						}
 						break;
 					case 'multipoint':
 						feature.geometry = {"type": "MultiPoint"};
@@ -287,7 +295,7 @@ var NVG = class {
 						delete feature.properties.points;
 						break;
 					case 'orbit':
-						feature.geometry = {"type": "Polygon"};
+						//feature.geometry = {"type": "Polygon"};
 						// TODO: create polygon
 						break;
 					case 'point':
@@ -305,7 +313,7 @@ var NVG = class {
 						delete feature.properties.points;
 						break;
 					case 'rect':
-						feature.geometry = {"type": "Polygon"};
+						//feature.geometry = {"type": "Polygon"};
 						// TODO: create polygon
 						break;
 					case 'text':
@@ -315,14 +323,7 @@ var NVG = class {
 					default:
 						console.log('TODO parse item default: ' + item.drawable)
 				}
-				if(geometrycollection){
-					// If this is part of a geometry collection we can't have a normal feature
-					// I know this is not according to GeoJSON specification, but lets try to 
-					// keep all attributes in some way
-					if(feature.id)feature.geometry.id = feature.id;
-					feature.geometry.properties = feature.properties;					
-					features.push(feature.geometry);
-				}else{
+				if(feature.geometry){
 					features.push(feature);
 				}
 			}
@@ -333,7 +334,7 @@ var NVG = class {
 		geoJSON.type = 'FeatureCollection';
 		for (var key in this){
 			if(key == 'items'){
-				geoJSON.features = items2features(this.items);
+				geoJSON.features = items2features(this.items, false);
 			}else{
 				geoJSON[key] = this[key];
 			}
