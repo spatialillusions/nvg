@@ -259,7 +259,7 @@ var NVG = class {
 					case 'circle':
 						feature.geometry = {"type": "Polygon"};
 						feature.geometry.coordinates = [[]];
-						for (var j = 360; j >= 0; j--){
+						for (var j = 360; j >= 0; j=j-5){
 							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.r, j));
 						}
 						break;
