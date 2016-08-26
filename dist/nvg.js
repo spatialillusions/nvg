@@ -139,7 +139,8 @@ var NVG = class {
 			for (var i = 0; i < nodes.length; i++){
 				var node = nodes[i];
 				if(node.nodeType == 1){
-					var nodeName = node.nodeName.split(':')[1].toLowerCase();
+					var nodeName = node.nodeName.split(':')[1] || node.nodeName;
+					nodeName = nodeName.toLowerCase();
 					var item = {};
 					if (['extendeddata','extension','metadata','schema','section','simpledata','simplefield'].lastIndexOf(nodeName) != -1){			
 						
@@ -208,7 +209,7 @@ var NVG = class {
 		}
 		
 		var xml = (new DOMParser()).parseFromString(xml , "text/xml");
-		if(xml.firstChild.nodeName.split(':')[1] == 'nvg'){//check that we actually are parsing NVG but ignore namespace
+		if(xml.firstChild.nodeName == 'nvg' || xml.firstChild.nodeName.split(':')[1] == 'nvg'){//check that we actually are parsing NVG but ignore namespace
 			this.version = xml.firstChild.getAttribute('version'); 
 			this.items = [];
 			var nodes = xml.firstChild.childNodes;
