@@ -231,7 +231,7 @@ var NVG = class {
 			return [lng2,lat2];
 		}
 		
-		function items2features(items){
+		function items2features(items, geometrycollection){
 			var features = [];
 			for (var i = 0; i < items.length; i++){
 				var item = items[i];
@@ -256,7 +256,7 @@ var NVG = class {
 						break;
 					case 'arrow':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
+						//feature.geometries = items2features(item.items, true);
 						//create polygon
 						break;
 					case 'circle':
@@ -268,7 +268,7 @@ var NVG = class {
 						break;
 					case 'composite':
 						feature.geometry = {"type": "GeometryCollection"};
-						feature.geometries = items2features(item.items);
+						feature.geometry.geometries = items2features(item.items, true);
 						delete feature.properties.items;
 						break;
 					case 'corridor':
@@ -283,7 +283,7 @@ var NVG = class {
 						break;
 					case 'g':
 						feature.geometry = {"type": "GeometryCollection"};
-						feature.geometries = items2features(item.items);
+						feature.geometry.geometries = items2features(item.items, true);
 						delete feature.properties.items;
 						break;
 					case 'multipoint':
@@ -322,7 +322,14 @@ var NVG = class {
 					default:
 						console.log('TODO parse item default: ' + item.drawable)
 				}
-				features.push(feature);
+				if(geometrycollection){
+					//If this is part of a geometry collection we can't have a normal feature
+					if(feature.id)feature.geometry.id = feature.id;
+					feature.geometry.properties = feature.properties;					
+					features.push(feature.geometry);
+				}else{
+					features.push(feature);
+				}
 			}
 			return features;
 		}
