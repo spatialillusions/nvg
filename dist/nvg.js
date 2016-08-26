@@ -246,18 +246,15 @@ var NVG = class {
 				switch (item.drawable) {
 					case 'arc':
 						feature.geometry = {"type": "LineString"};
-						//feature.geometries = items2features(item.items);
-						//create line
+						// TODO: create line
 						break;
 					case 'arcband':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
-						//create polygon
+						// TODO: create polygon
 						break;
 					case 'arrow':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items, true);
-						//create polygon
+						// TODO: create polygon
 						break;
 					case 'circle':
 						feature.geometry = {"type": "Polygon"};
@@ -273,13 +270,11 @@ var NVG = class {
 						break;
 					case 'corridor':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
-						//create polygon
+						// TODO: create polygon
 						break;
 					case 'ellipse':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
-						//create polygon
+						// TODO: create polygon
 						break;
 					case 'g':
 						feature.geometry = {"type": "GeometryCollection"};
@@ -293,8 +288,7 @@ var NVG = class {
 						break;
 					case 'orbit':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
-						//create polygon
+						// TODO: create polygon
 						break;
 					case 'point':
 						feature.geometry = {"type": "Point"};
@@ -312,8 +306,7 @@ var NVG = class {
 						break;
 					case 'rect':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
-						//create polygon
+						// TODO: create polygon
 						break;
 					case 'text':
 						feature.geometry = {"type": "Point"};
