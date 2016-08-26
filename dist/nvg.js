@@ -217,6 +217,19 @@ var NVG = class {
 	}
 	toGeoJSON(){
 		//parse this to GeoJSON
+		function distBearing(point, dist, bearing){
+			var angularDist = dist/6371e3;
+			var bearing = bearing * (Math.PI/180);
+			var lng = point[0] * (Math.PI/180);
+			var lat = point[1] * (Math.PI/180);
+			//console.log(lng + ' ' + lat)
+			var lat2 = Math.asin(Math.sin(lat)*Math.cos(angularDist)+Math.cos(lat)*Math.sin(angularDist)*Math.cos(bearing));
+			var lng2 = (lng+Math.atan2(Math.sin(bearing)*Math.sin(angularDist)*Math.cos(lat),Math.cos(angularDist)-Math.sin(lat)*Math.sin(lat2)));
+			lat2 = lat2/(Math.PI/180);
+			lng2 = ((lng2/(Math.PI/180))+540)%360-180;
+			return [lng2,lat2];
+		}
+		
 		function items2features(items){
 			var features = [];
 			for (var i = 0; i < items.length; i++){
@@ -247,8 +260,10 @@ var NVG = class {
 						break;
 					case 'circle':
 						feature.geometry = {"type": "Polygon"};
-						//feature.geometries = items2features(item.items);
-						//create polygon
+						feature.geometry.coordinates = [[]];
+						for (var i = 0; i <= 360; i++){
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.r, i));
+						}
 						break;
 					case 'composite':
 						feature.geometry = {"type": "GeometryCollection"};
