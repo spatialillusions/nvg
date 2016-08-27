@@ -277,8 +277,12 @@ var NVG = class {
 						// TODO: create polygon
 						break;
 					case 'ellipse':
-						//feature.geometry = {"type": "Polygon"};
-						// TODO: create polygon
+						feature.geometry = {"type": "Polygon"};
+						feature.geometry.coordinates = [[]];
+						for (var j = 360; j >= 0; j=j-2){
+							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], radius, j+item.rotation));
+						}
 						break;
 					case 'g':
 						//Flatten groups
