@@ -336,8 +336,20 @@ var NVG = class {
 						delete feature.properties.points;
 						break;
 					case 'rect':
-						//feature.geometry = {"type": "Polygon"};
-						// TODO: create polygon
+						feature.geometry = {"type": "Polygon"};
+						feature.geometry.coordinates = [[]];
+						var diagonalRadius = Math.sqrt(Math.pow(item.rx,2)+Math.pow(item.rx,2));
+						var angle;
+						angle = ((Math.PI/2)-Math.atan2(item.ry, item.rx)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], diagonalRadius, item.rotation?angle-item.rotation:angle));
+						angle = ((Math.PI/2)-Math.atan2(-item.ry, item.rx)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], diagonalRadius, item.rotation?angle-item.rotation:angle));
+						angle = ((Math.PI/2)-Math.atan2(-item.ry, -item.rx)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], diagonalRadius, item.rotation?angle-item.rotation:angle));
+						angle = ((Math.PI/2)-Math.atan2(item.ry, -item.rx)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], diagonalRadius, item.rotation?angle-item.rotation:angle));
+						angle = ((Math.PI/2)-Math.atan2(item.ry, item.rx)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], diagonalRadius, item.rotation?angle-item.rotation:angle));
 						break;
 					case 'text':
 						feature.geometry = {"type": "Point"};
