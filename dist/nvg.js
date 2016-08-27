@@ -245,8 +245,15 @@ var NVG = class {
 				}
 				switch (item.drawable) {
 					case 'arc':
-						//feature.geometry = {"type": "LineString"};
-						// TODO: create line
+						feature.geometry = {"type": "LineString"};
+						feature.geometry.coordinates = [];
+						var startangle = item.startangle;
+						var endangle = item.endangle;
+						if(startangle > endangle) endangle += 360;
+						for (var j = startangle; j <= endangle; j+=2){
+							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
+							feature.geometry.coordinates.push(distBearing([item.cx,item.cy], radius, j));
+						}
 						break;
 					case 'arcband':
 						//feature.geometry = {"type": "Polygon"};
@@ -259,7 +266,7 @@ var NVG = class {
 					case 'circle':
 						feature.geometry = {"type": "Polygon"};
 						feature.geometry.coordinates = [[]];
-						for (var j = 360; j >= 0; j=j-5){
+						for (var j = 360; j >= 0; j-=5){
 							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.r, j));
 						}
 						break;
@@ -279,7 +286,7 @@ var NVG = class {
 					case 'ellipse':
 						feature.geometry = {"type": "Polygon"};
 						feature.geometry.coordinates = [[]];
-						for (var j = 360; j >= 0; j=j-2){
+						for (var j = 360; j >= 0; j-=2){
 							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
 							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], radius, j+item.rotation));
 						}
