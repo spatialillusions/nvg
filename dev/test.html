@@ -24,8 +24,48 @@ Select NVG XML file (or NVG JSON): <input type="file" id="files" name="files[]">
 <div id="map" class="map" style="width: 520px; height: 300px;"></div>
 <script>
 var vectorSource = new ol.source.Vector();
+
+var styleFunction = function(feature) {
+	function hex2rgb(hex){
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    	return result ? [
+        	parseInt(result[1], 16),
+        	parseInt(result[2], 16),
+        	parseInt(result[3], 16)
+    	] : null;
+	}
+	var stroke = new ol.style.Stroke({lineCap:'butt', stroke: 'rgb(0,0,0)'});
+	var fill = new ol.style.Fill({color: 'rgba(0,0,0,0)'});
+	
+	if(feature.getProperties().hasOwnProperty('style')){
+		stroke.setColor(feature.getProperties().style['stroke'] || 'rgb(0,0,0)')
+		if(feature.getProperties().style.hasOwnProperty('stroke-opacity')){
+			var color = hex2rgb(stroke.getColor());
+			color[3] = feature.getProperties().style['stroke-opacity'];
+			stroke.setColor('rgba(' + color.join(',') + ')')
+		}
+		stroke.setWidth(feature.getProperties().style['stroke-width'] || 1);
+		if(feature.getProperties().style.hasOwnProperty('stroke-dash')){
+			stroke.setLineDash(feature.getProperties().style['stroke-dash'].split(','));
+		}
+		
+		fill.setColor(feature.getProperties().style['fill'] || 'rgba(0,0,0,0)')
+		if(feature.getProperties().style.hasOwnProperty('fill-opacity')){
+			var color = hex2rgb(fill.getColor());
+			color[3] = feature.getProperties().style['fill-opacity'];
+			fill.setColor('rgba(' + color.join(',') + ')')
+		}
+	}
+	var style = new ol.style.Style({
+          stroke: stroke,
+          fill: fill
+        })
+	return [style];
+} 
+      
 var vectorLayer = new ol.layer.Vector({
-	source: vectorSource
+	source: vectorSource,
+	style: styleFunction
 });
 
 var map = new ol.Map({
