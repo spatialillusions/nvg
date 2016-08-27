@@ -252,7 +252,7 @@ var NVG = class {
 						if(startangle > endangle) endangle += 360;
 						for (var j = startangle; j <= endangle; j+=2){
 							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
-							feature.geometry.coordinates.push(distBearing([item.cx,item.cy], radius, j));
+							feature.geometry.coordinates.push(distBearing([item.cx,item.cy], radius, item.rotation?j+item.rotation:j));
 						}
 						break;
 					case 'arcband':
