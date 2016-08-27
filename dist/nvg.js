@@ -251,8 +251,8 @@ var NVG = class {
 						var endangle = item.endangle;
 						if(startangle > endangle) endangle += 360;
 						for (var j = startangle; j <= endangle; j+=2){
-							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
-							feature.geometry.coordinates.push(distBearing([item.cx,item.cy], radius, item.rotation?j+item.rotation:j));
+							var radius = item.ry * item.rx / Math.sqrt(Math.pow(item.rx * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.ry * Math.sin(j * (Math.PI/180)),2));
+							feature.geometry.coordinates.push(distBearing([item.cx,item.cy], radius, item.rotation?j-item.rotation:j));
 						}
 						break;
 					case 'arcband':
@@ -262,11 +262,11 @@ var NVG = class {
 						var endangle = item.endangle;
 						if(startangle > endangle) endangle += 360;
 						for (var j = startangle; j <= endangle; j+=2){
-							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
+							var radius = item.ry * item.rx / Math.sqrt(Math.pow(item.rx * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.ry * Math.sin(j * (Math.PI/180)),2));
 							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.minr, j));
 						}
 						for (var j = endangle; j >= startangle; j-=2){
-							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
+							var radius = item.ry * item.rx / Math.sqrt(Math.pow(item.rx * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.ry * Math.sin(j * (Math.PI/180)),2));
 							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.maxr, j));
 						}
 						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.minr, startangle));
@@ -299,8 +299,8 @@ var NVG = class {
 						feature.geometry = {"type": "Polygon"};
 						feature.geometry.coordinates = [[]];
 						for (var j = 360; j >= 0; j-=2){
-							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
-							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], radius, j+item.rotation));
+							var radius = item.ry * item.rx / Math.sqrt(Math.pow(item.rx * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.ry * Math.sin(j * (Math.PI/180)),2));
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], radius, j-item.rotation));
 						}
 						break;
 					case 'g':
