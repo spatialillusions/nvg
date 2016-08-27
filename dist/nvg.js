@@ -256,8 +256,20 @@ var NVG = class {
 						}
 						break;
 					case 'arcband':
-						//feature.geometry = {"type": "Polygon"};
-						// TODO: create polygon
+						feature.geometry = {"type": "Polygon"};
+						feature.geometry.coordinates = [[]];
+						var startangle = item.startangle;
+						var endangle = item.endangle;
+						if(startangle > endangle) endangle += 360;
+						for (var j = startangle; j <= endangle; j+=2){
+							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.minr, j));
+						}
+						for (var j = endangle; j >= startangle; j-=2){
+							var radius = item.rx * item.ry / Math.sqrt(Math.pow(item.ry * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.rx * Math.sin(j * (Math.PI/180)),2));
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.maxr, j));
+						}
+						feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], item.minr, startangle));
 						break;
 					case 'arrow':
 						//feature.geometry = {"type": "Polygon"};
