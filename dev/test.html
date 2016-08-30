@@ -53,7 +53,7 @@ var styleFunction = function(feature) {
 			stroke.setLineDash(feature.getProperties().style['stroke-dash'].split(','));
 		}
 		
-		fill.setColor(feature.getProperties().style['fill'] || 'rgba(0,0,0,0)')
+		if(feature.getProperties().style['fill'] != 'none')fill.setColor(feature.getProperties().style['fill'])
 		if(feature.getProperties().style.hasOwnProperty('fill-opacity')){
 			var color = hex2rgb(fill.getColor());
 			color[3] = feature.getProperties().style['fill-opacity'];
