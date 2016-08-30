@@ -290,8 +290,33 @@ var NVG = class {
 						}
 						break;
 					case 'corridor':
-						//feature.geometry = {"type": "Polygon"};
-						// TODO: create polygon
+						var direction;
+						feature.geometry = {"type": "Polygon"};
+						feature.geometry.coordinates = [[]];
+						direction = (Math.atan2(item.points[1][0] - item.points[0][0], item.points[1][1] - item.points[0][1]) - (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction));
+						for (var j = 1; j < item.points.length-1; j++){
+							var direction1 = (Math.atan2(item.points[j][0] - item.points[j-1][0], item.points[j][1] - item.points[j-1][1])  - (Math.PI/2));							
+							var direction2 = (Math.atan2(item.points[j+1][0] - item.points[j][0], item.points[j+1][1] - item.points[j][1])  - (Math.PI/2));
+							var factor = Math.abs(1/Math.sin((Math.PI/2)-((direction1+direction2)/2)));
+							feature.geometry.coordinates[0].push(distBearing(item.points[j], (item.width/2)*factor, ((direction1+direction2)/2) / (Math.PI/180)));
+						}
+						direction = (Math.atan2(item.points[item.points.length-1][0] - item.points[item.points.length-2][0], item.points[item.points.length-1][1] - item.points[item.points.length-2][1]) - (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[item.points.length-1], item.width/2, direction));
+
+						direction = (Math.atan2(item.points[item.points.length-1][0] - item.points[item.points.length-2][0], item.points[item.points.length-1][1] - item.points[item.points.length-2][1]) + (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[item.points.length-1], item.width/2, direction));
+						for (var j = item.points.length-2; j > 0; j--){
+							var direction1 = (Math.atan2(item.points[j][0] - item.points[j-1][0], item.points[j][1] - item.points[j-1][1])  + (Math.PI/2));							
+							var direction2 = (Math.atan2(item.points[j+1][0] - item.points[j][0], item.points[j+1][1] - item.points[j][1])  + (Math.PI/2));
+							var factor = Math.abs(1/Math.sin((Math.PI/2)-((direction1+direction2)/2)));
+							feature.geometry.coordinates[0].push(distBearing(item.points[j], (item.width/2)*factor, ((direction1+direction2)/2) / (Math.PI/180)));
+						}
+						direction = (Math.atan2(item.points[1][0] - item.points[0][0], item.points[1][1] - item.points[0][1]) + (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction));
+
+						direction = (Math.atan2(item.points[1][0] - item.points[0][0], item.points[1][1] - item.points[0][1]) - (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction));
 						break;
 					case 'ellipse':
 						feature.geometry = {"type": "Polygon"};
