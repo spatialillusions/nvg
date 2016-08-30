@@ -341,8 +341,24 @@ var NVG = class {
 						delete feature.properties.points;
 						break;
 					case 'orbit':
-						//feature.geometry = {"type": "Polygon"};
-						// TODO: create polygon
+						var direction;
+						feature.geometry = {"type": "Polygon"};
+						feature.geometry.coordinates = [[]];
+						direction = (Math.atan2(item.points[1][0] - item.points[0][0], item.points[1][1] - item.points[0][1]) - (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction));
+						for (var j = 0; j <= 180; j+=2){
+							feature.geometry.coordinates[0].push(distBearing(item.points[1], item.width/2, direction + j ));
+						}
+						
+						direction = (Math.atan2(item.points[0][0] - item.points[1][0], item.points[0][1] - item.points[1][1]) - (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[item.points.length-1], item.width/2, direction));
+						for (var j = 0; j <= 180; j+=2){
+							feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction + j ));
+						}
+						
+						direction = (Math.atan2(item.points[1][0] - item.points[0][0], item.points[1][1] - item.points[0][1]) - (Math.PI/2)) / (Math.PI/180);
+						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction));
+						break;
 						break;
 					case 'point':
 						feature.geometry = {"type": "Point"};
