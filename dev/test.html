@@ -36,13 +36,15 @@ var styleFunction = function(feature) {
         	parseInt(result[1], 16),
         	parseInt(result[2], 16),
         	parseInt(result[3], 16)
-    	] : null;
+    	] : false;
 	}
-	var stroke = new ol.style.Stroke({lineCap:'butt', stroke: 'rgb(0,0,0)', width: 1});
+	var stroke = new ol.style.Stroke({lineCap:'butt', color:'#000000', width: 1});
 	var fill = new ol.style.Fill({color: 'rgba(0,0,0,0)'});
 	
 	if(feature.getProperties().hasOwnProperty('style')){
-		stroke.setColor(feature.getProperties().style['stroke'] || 'rgb(0,0,0)')
+		if(feature.getProperties().style.hasOwnProperty('stroke')){
+			stroke.setColor(feature.getProperties().style['stroke'])
+		}
 		if(feature.getProperties().style.hasOwnProperty('stroke-opacity')){
 			var color = hex2rgb(stroke.getColor());
 			color[3] = feature.getProperties().style['stroke-opacity'];
@@ -58,6 +60,7 @@ var styleFunction = function(feature) {
 		}
 		if(feature.getProperties().style.hasOwnProperty('fill-opacity')){
 			var color = hex2rgb(fill.getColor());
+			if(!color) color = [0,0,0];
 			color[3] = feature.getProperties().style['fill-opacity'];
 			fill.setColor('rgba(' + color.join(',') + ')')
 		}
