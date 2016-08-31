@@ -361,7 +361,7 @@ var NVG = class {
 						feature.geometry.coordinates = [[]];
 						for (var j = 360; j >= 0; j-=2){
 							var radius = item.ry * item.rx / Math.sqrt(Math.pow(item.rx * Math.cos(j * (Math.PI/180)),2) + Math.pow(item.ry * Math.sin(j * (Math.PI/180)),2));
-							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], radius, j-item.rotation));
+							feature.geometry.coordinates[0].push(distBearing([item.cx,item.cy], radius, j-(item.rotation||0)));
 						}
 						break;
 					case 'g':
