@@ -288,8 +288,8 @@ var NVG = class {
 						for (var j = 1; j < item.points.length-1; j++){
 							var direction1 = (bearing(item.points[j], item.points[j-1]) +360) % 360;
 							var direction2 = (bearing(item.points[j], item.points[j+1]) +360) % 360;
-							var factor = Math.abs(1/Math.sin(Math.PI/2-(((direction1+direction2)/2)*(Math.PI/180))));
-							feature.geometry.coordinates.push(distBearing(item.points[j], (item.width/2)*factor, (direction1-90) + ((direction1+direction2)/2)));
+							var factor = Math.abs(1/Math.sin(((direction2-direction1)/2)*(Math.PI/180)));
+							feature.geometry.coordinates.push(distBearing(item.points[j], (item.width/2)*factor, 180+((direction1+direction2)/2)));
 						}
 						direction = (bearing(item.points[item.points.length-1],item.points[item.points.length-2]) + 180) % 360;
 						
@@ -304,8 +304,8 @@ var NVG = class {
 						for (var j = item.points.length-2; j > 0; j--){
 							var direction1 = (bearing(item.points[j], item.points[j-1]) +360) % 360;
 							var direction2 = (bearing(item.points[j], item.points[j+1]) +360) % 360;
-							var factor = Math.abs(1/Math.sin(Math.PI/2-(((direction1+direction2)/2)*(Math.PI/180))));
-							feature.geometry.coordinates.push(distBearing(item.points[j], -(item.width/2)*factor, (direction1-90) + ((direction1+direction2)/2)));
+							var factor = Math.abs(1/Math.sin(((direction2-direction1)/2)*(Math.PI/180)));
+							feature.geometry.coordinates.push(distBearing(item.points[j], -(item.width/2)*factor, 180 + ((direction1+direction2)/2)));
 						}
 						
 						direction = (bearing(item.points[0],item.points[1]) +360) % 360;
@@ -336,25 +336,25 @@ var NVG = class {
 						for (var j = 1; j < item.points.length-1; j++){
 							var direction1 = (bearing(item.points[j], item.points[j-1]) +360) % 360;
 							var direction2 = (bearing(item.points[j], item.points[j+1]) +360) % 360;
-							var factor = Math.abs(1/Math.sin(Math.PI/2-(((direction1+direction2)/2)*(Math.PI/180))));
-							feature.geometry.coordinates[0].push(distBearing(item.points[j], (item.width/2)*factor, (direction1-90) + ((direction1+direction2)/2)));
+							var factor = Math.abs(1/Math.sin(((direction2-direction1)/2)*(Math.PI/180)));
+							feature.geometry.coordinates[0].push(distBearing(item.points[j], (item.width/2)*factor, 180+((direction1+direction2)/2)));
 						}
 						
 						direction = (bearing(item.points[item.points.length-1],item.points[item.points.length-2]) + 180) % 360;
 						feature.geometry.coordinates[0].push(distBearing(item.points[item.points.length-1], item.width/2, direction-90));
 						feature.geometry.coordinates[0].push(distBearing(item.points[item.points.length-1], item.width/2, direction+90));
-						
+
 						for (var j = item.points.length-2; j > 0; j--){
 							var direction1 = (bearing(item.points[j], item.points[j-1]) +360) % 360;
 							var direction2 = (bearing(item.points[j], item.points[j+1]) +360) % 360;
-							var factor = Math.abs(1/Math.sin(Math.PI/2-(((direction1+direction2)/2)*(Math.PI/180))));
-							feature.geometry.coordinates[0].push(distBearing(item.points[j], -(item.width/2)*factor, (direction1-90) + ((direction1+direction2)/2)));
+							var factor = Math.abs(1/Math.sin(((direction2-direction1)/2)*(Math.PI/180)));
+							feature.geometry.coordinates[0].push(distBearing(item.points[j], -(item.width/2)*factor, 180 + ((direction1+direction2)/2)));
 						}
 						
 						direction = (bearing(item.points[0],item.points[1]) +360) % 360;
 						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction+90));
 						feature.geometry.coordinates[0].push(distBearing(item.points[0], item.width/2, direction-90));//Close line
-						
+
 						break;
 					case 'ellipse':
 						feature.geometry = {"type": "Polygon"};
