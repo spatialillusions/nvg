@@ -5,6 +5,12 @@ var NVG = class {
 		this.document = 'nvg';
 		this.items = [];
 		this.version = '2.0.2'
+		if (Array.isArray(input)){
+			this.items = input;
+		}
+		if (typeof input == 'object' && !Array.isArray(input)){
+			this.items.push(input);
+		}
 		if (typeof input == 'string'){
 			//do stuff with input object
 			try {
@@ -18,9 +24,12 @@ var NVG = class {
 			}	
 		}
 	}
-	getItems(){ //returns all items
-		return this.items;
+	getItem(uri){ //returns all items
+		if(typeof uri == 'undefined')return this.items;
 	}
+	/*getItems(){ //returns all items
+		return this.items;
+	}*/
 	parseXML(xml){
 		//parse XML string to JSON
 		function tagAttributes(nodes, current){
@@ -277,7 +286,7 @@ var NVG = class {
 					exclude.push(distBearing([exclusion.cx,exclusion.cy], diagonalRadius, exclusion.rotation?angle-exclusion.rotation:angle));
 					break;
 				default:
-					console.log('TODO parse item default: ' + item.drawable)
+					console.log('TODO parse item default: ' + exclusion.ring)
 			}
 			return exclude;
 		}
@@ -478,8 +487,8 @@ var NVG = class {
 				}
 				
 				if(item.hasOwnProperty('exclusion')){
-					for (var i = 0; i < item.exclusion.length; i++){
-						feature.geometry.coordinates.push(exclusions(item.exclusion[i]));
+					for (var e = 0; e < item.exclusion.length; e++){
+						feature.geometry.coordinates.push(exclusions(item.exclusion[e]));
 					}
 				}
 				if(feature.geometry){
@@ -502,5 +511,4 @@ var NVG = class {
 	toXML(){
 		//parse this to NVG XML
 	}
-	
 };
