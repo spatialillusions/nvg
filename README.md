@@ -28,7 +28,5 @@ This outputs the NVG object as GeoJSON.
 
  - The library uses a sphere aproximation of the earth when it calculates some geometries as GeoJSON and this gives an error up to 0.5%, or 5m in 1km distances.
 
- - Some geometry types is still being implemented.
-
 ## License and Contact
 The library is developed by Måns Beckman, www.spatialillusions.com, and is provided under a MIT License.
