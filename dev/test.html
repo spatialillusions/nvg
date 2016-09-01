@@ -119,6 +119,7 @@ function loadFileAsText (evt) {
         var extent = vectorSource.getExtent();
 		map.getView().fit(extent, map.getSize());
 		
+		//console.log(new NVG(parser.getItem()))	
 	};
 	fileReader.readAsText(fileToLoad, "UTF-8");
 }
