@@ -24,12 +24,14 @@ var NVG = class {
 			}	
 		}
 	}
-	getItem(uri){ //returns all items
+	getItem(uri){ //returns item from uri
 		if(typeof uri == 'undefined')return this.items;
+		
+		
 	}
-	/*getItems(){ //returns all items
+	getItems(){ //returns all items
 		return this.items;
-	}*/
+	}
 	parseXML(xml){
 		//parse XML string to JSON
 		function tagAttributes(nodes, current){
@@ -104,7 +106,7 @@ var NVG = class {
 						case 'linear-ring':
 						case 'rect-ring':
 							var exclude = {};
-							exclude.drawable = nodeName.replace('-','');
+							exclude.ring = nodeName.replace('-','');
 							nodeAttibutes(node, exclude);
 							current.push(exclude);
 							break;
@@ -268,8 +270,10 @@ var NVG = class {
 					}
 					break;
 				case 'linearring':
+					console.log(exclusion)
 					exclude = exclusion.points;
 					exclude.push(exclusion.points[0]);
+					console.log(exclude)
 					break;
 				case 'rectangularring':
 					var diagonalRadius = Math.sqrt(Math.pow(exclusion.rx,2)+Math.pow(exclusion.rx,2));
