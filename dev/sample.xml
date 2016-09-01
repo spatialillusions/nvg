@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nvg:nvg  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:nvg='https://tide.act.nato.int/schemas/2012/10/nvg'
+   xsi:schemaLocation='https://tide.act.nato.int/schemas/2012/10/nvg ../../Schemas/nvg.2.0.xsd'
+   version="2.0.0">
+    <nvg:arrow
+            label="Styled Arrow"
+            uri="urn:md5:a87851c9d37e678829e1150717b5cf86"
+            points="15.8,60.1 16.4,60 16.8,60"
+            width="5000"
+            style="stroke-width:5;fill:none;stroke-opacity:0.5;">
+        <nvg:textInfo>Example arrow for documentation</nvg:textInfo>
+    </nvg:arrow>
+
+
+        <nvg:corridor
+            label="Blue Corridor"
+            uri="urn:md5:a87851c9d37e678829e115fdsa0717b5c432423"
+            points="15.5,60.1 16,60 16,60.2"
+            width="5000"
+            style="stroke:rgb(0,0,255);stroke-width:2;fill:none">
+    </nvg:corridor>
+ 
+         <nvg:corridor
+            label="yellow Corridor"
+            uri="urn:md5:a87851c9d37e678829e115fdsa0rqwrewqr717b5c432423"
+            points="15.5,60 16,60 16.5,60"
+            width="5000"
+            style="stroke:rgb(0,255,255);stroke-width:2;fill:none">
+    </nvg:corridor>
+       
+         <nvg:corridor
+            label="black corridor"
+            uri="urn:md5:a850ff609a203641ff0214ac92e29763"
+            points="15.5,59.9 16,60 16.5,60"
+            width="5000"
+            symbol="app6a:G*C*MALC--*****">
+        <nvg:textInfo>Example corridor for documentation</nvg:textInfo>
+    </nvg:corridor>
+    
+          <nvg:corridor
+            label="red Corridor"
+            uri="urn:md5:a87851c9d37e678829e11507fdsafas324234325"
+            points="15.5,59.8 16,60 16.5,60.25"
+            width="5000"
+            style="stroke:rgb(255,0,0);stroke-width:2;fill:none">
+    </nvg:corridor>
+          
+
+ 
+         <nvg:corridor
+            label="green Corridor"
+            uri="urn:md5:a87851c9d37e678829e11507fdsafas32423"
+            points="15.5,59.7 16,60.2 16.5,60"
+            width="5000"
+            style="stroke:rgb(0,255,0);stroke-width:2;fill:none">
+    </nvg:corridor>
+       
+    
+    
+        <nvg:polyline
+            label="Enemy line"
+            uri="urn:md5:56688b08cf5d9a902786a14791cde933"
+            symbol="app6a:GHC*MGAUAE*****"
+            style="stroke-width:1;stroke:rgb(100,100,100);"
+            points="15.5,60 16,60 16.5,60">
+        <nvg:textInfo>Example polyline for documentation</nvg:textInfo>
+    </nvg:polyline>
+    
+    
+    <nvg:circle 
+           uri="urn:md5:3d8d413aa68c89cfdsa990b3ebc8f7e89a57"
+           label="Styled circle"
+           cx="17" cy="60" r="5000"
+           style="stroke-width:1;stroke-dash:15;fill:#66ff66;fill-opacity:0.5">
+           <nvg:textInfo>Example circle for documentation</nvg:textInfo>
+            <nvg:exclude>
+               <nvg:linear-ring points="17,60 17.03,59.98 17.03,60.03 17,60.03"/>
+           </nvg:exclude>
+    </nvg:circle>
+    
+        <nvg:arcband
+        label="Styled arcband"
+        uri="urn:md5:ebeebd0b9a51f78d4f83108c82202d12"
+        cx="17" cy="60"
+        minr="20000"   maxr="30000"
+        startangle="315" endangle="5"
+        style="stroke:#ff0000;stroke-opacity:1.0;stroke-width:1;stroke-dash:none;fill:#ff0000;fill-opacity:0.40;">
+            <nvg:textInfo>Example arcband for documentation</nvg:textInfo>
+    </nvg:arcband>
+</nvg:nvg>
