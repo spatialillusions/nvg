@@ -270,10 +270,8 @@ var NVG = class {
 					}
 					break;
 				case 'linearring':
-					console.log(exclusion)
 					exclude = exclusion.points;
 					exclude.push(exclusion.points[0]);
-					console.log(exclude)
 					break;
 				case 'rectangularring':
 					var diagonalRadius = Math.sqrt(Math.pow(exclusion.rx,2)+Math.pow(exclusion.rx,2));
