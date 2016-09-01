@@ -12,16 +12,16 @@ body{
 <body onload="document.getElementById('files').addEventListener('change', loadFileAsText, false)">
 Select NVG XML file (or NVG JSON): <input type="file" id="files" name="files[]"><br>
 <h3>NVG JSON according to NVG JSON specification: <i>new NVG(file)</i></h3>
-<textarea id="nvg_json" style="width: 520px; height: 300px;">
+<textarea id="nvg_json" style="width: 700px; height: 300px;">
 </textarea><br>
 <h3>NVG GeoJSON according to GeoJSON specification:  <i>toGeoJSON()</i></h3>
-<textarea id="nvg_geojson" style="width: 520px; height: 300px;">
+<textarea id="nvg_geojson" style="width: 700px; height: 300px;">
 </textarea><br>
 
 <link rel="stylesheet" href="http://openlayers.org/en/v3.17.1/css/ol.css" type="text/css">
 <script src="http://openlayers.org/en/v3.17.1/build/ol.js"></script>
 <h3>And put it on a simple Open Layers map:</h3>
-<div id="map" class="map" style="width: 520px; height: 300px;"></div>
+<div id="map" class="map" style="width: 700px; height: 500px;"></div>
 <script>
 var vectorSource = new ol.source.Vector();
 
