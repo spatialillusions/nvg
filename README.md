@@ -1,6 +1,8 @@
 # nvg
 Javascript library for Nato Vector Graphics
 
+![Sample Output on Open Layers Map](docs/sample.xml.png?raw=true)
+
 ## About Nato Vector Graphics
 
 The best resource for information about NVG is at TidepediA https://tide.act.nato.int/tidepedia/index.php/NATO_Vector_Graphics_(NVG)
