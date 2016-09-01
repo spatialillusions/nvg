@@ -226,7 +226,6 @@ var NVG = class {
     		var x = Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(l2-l1);
     		return Math.atan2(y,x)/(Math.PI/180);
 		}
-		
 		function distBearing(point, dist, bearing){
 			var angularDist = dist/6371e3;
 			var bearing = bearing * (Math.PI/180);
@@ -238,9 +237,50 @@ var NVG = class {
 			lng2 = ((lng2/(Math.PI/180))+540)%360-180;
 			return [lng2,lat2];
 		}
-		
-		
-		
+		function exclusions(exclusion){
+			var exclude = [];
+			switch (exclusion.ring) {
+				case 'arcbandring':
+					var startangle = exclusion.startangle;
+					var endangle = exclusion.endangle;
+					if(startangle > endangle) endangle += 360;
+					for (var j = startangle; j <= endangle; j+=2){
+						exclude.push(distBearing([exclusion.cx,exclusion.cy], exclusion.minr, j));
+					}
+					for (var j = endangle; j >= startangle; j-=2){
+						exclude.push(distBearing([exclusion.cx,exclusion.cy], exclusion.maxr, j));
+					}
+					exclude.push(distBearing([exclusion.cx,exclusion.cy], exclusion.minr, startangle));
+					break;
+				case 'ellipticalring':
+					for (var j = 360; j >= 0; j-=2){
+						var radius = exclusion.ry * exclusion.rx / Math.sqrt(Math.pow(exclusion.rx * Math.cos(j * (Math.PI/180)),2) + Math.pow(exclusion.ry * Math.sin(j * (Math.PI/180)),2));
+						exclude.push(distBearing([exclusion.cx,exclusion.cy], radius, j-(exclusion.rotation||0)));
+					}
+					break;
+				case 'linearring':
+					exclude = exclusion.points;
+					exclude.push(exclusion.points[0]);
+					break;
+				case 'rectangularring':
+					var diagonalRadius = Math.sqrt(Math.pow(exclusion.rx,2)+Math.pow(exclusion.rx,2));
+					var angle;
+					angle = ((Math.PI/2)-Math.atan2(exclusion.ry, exclusion.rx)) / (Math.PI/180);
+					exclude.push(distBearing([exclusion.cx,exclusion.cy], diagonalRadius, exclusion.rotation?angle-exclusion.rotation:angle));
+					angle = ((Math.PI/2)-Math.atan2(-exclusion.ry, exclusion.rx)) / (Math.PI/180);
+					exclude.push(distBearing([exclusion.cx,exclusion.cy], diagonalRadius, exclusion.rotation?angle-exclusion.rotation:angle));
+					angle = ((Math.PI/2)-Math.atan2(-exclusion.ry, -exclusion.rx)) / (Math.PI/180);
+					exclude.push(distBearing([exclusion.cx,exclusion.cy], diagonalRadius, exclusion.rotation?angle-exclusion.rotation:angle));
+					angle = ((Math.PI/2)-Math.atan2(exclusion.ry, -exclusion.rx)) / (Math.PI/180);
+					exclude.push(distBearing([exclusion.cx,exclusion.cy], diagonalRadius, exclusion.rotation?angle-exclusion.rotation:angle));
+					angle = ((Math.PI/2)-Math.atan2(exclusion.ry, exclusion.rx)) / (Math.PI/180);
+					exclude.push(distBearing([exclusion.cx,exclusion.cy], diagonalRadius, exclusion.rotation?angle-exclusion.rotation:angle));
+					break;
+				default:
+					console.log('TODO parse item default: ' + item.drawable)
+			}
+			return exclude;
+		}
 		function items2features(items, geometrycollection){
 			var features = [];
 			for (var i = 0; i < items.length; i++){
@@ -405,6 +445,7 @@ var NVG = class {
 					case 'polygon':
 						feature.geometry = {"type": "Polygon"};
 						feature.geometry.coordinates = [item.points];
+						feature.geometry.coordinates[0].push(item.points[0])
 						delete feature.properties.points;
 						break;
 					case 'polyline':
@@ -435,13 +476,18 @@ var NVG = class {
 					default:
 						console.log('TODO parse item default: ' + item.drawable)
 				}
+				
+				if(item.hasOwnProperty('exclusion')){
+					for (var i = 0; i < item.exclusion.length; i++){
+						feature.geometry.coordinates.push(exclusions(item.exclusion[i]));
+					}
+				}
 				if(feature.geometry){
 					features.push(feature);
 				}
 			}
 			return features;
 		}
-		
 		var geoJSON = {};
 		geoJSON.type = 'FeatureCollection';
 		for (var key in this){
@@ -451,7 +497,6 @@ var NVG = class {
 				geoJSON[key] = this[key];
 			}
 		}
-		
 		return geoJSON;
 	}
 	toXML(){
