@@ -13,9 +13,13 @@ At TidepediA you will find all documentation about NVG including sample files an
 ## Usage
 
 ### new NVG(input)
-Create a new NVG object by using `new NVG(input)` where input is optional and is NVG in XML or JSON format.
+Create a new NVG object by using `new NVG(input)` where input is optional and is NVG as strings in XML or JSON format, it can also be a single item object or an array of items (`see getItem()`).
 
 The NVG object has the following methods.
+
+#### getItem(uri)
+
+Returns the item with a specified uri. (If uri is not provided it will return all items.)
 
 #### parseXML(XML)
 
