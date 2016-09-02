@@ -33,6 +33,8 @@ This outputs the NVG object as GeoJSON.
 ## Limitations
 
  - The library uses a sphere aproximation of the earth when it calculates some geometries as GeoJSON and this gives an error up to 0.5%, or 5m in 1km distances.
+ 
+ - The library does convert some NVG elements to shapes for GeoJSON output, converting circles to polygons is one example, but does not draw other tactical graphics. The library can however be used together with milsymbol or mil-sym-js to draw tactical symbology to a webmap.
 
 ## License and Contact
 The library is developed by Måns Beckman, www.spatialillusions.com, and is provided under a MIT License.
