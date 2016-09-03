@@ -27,7 +27,17 @@ var NVG = class {
 	getItem(uri){ //returns item from uri
 		if(typeof uri == 'undefined')return this.items;
 		
-		
+		function getItemByURI(uri, items){
+			for (var i = 0; i< items.length; i++){
+				if(items[i].uri == uri) return items[i];
+				if(items[i].hasOwnProperty('items')){
+					var result = getItemByURI(uri, items[i].items);
+					if(result) return result;
+				}
+			}
+			return false;
+		}
+		return getItemByURI(uri, this.items);
 	}
 	getItems(){ //returns all items
 		return this.items;
