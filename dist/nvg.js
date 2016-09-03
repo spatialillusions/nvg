@@ -223,7 +223,12 @@ var NVG = class {
 							item.items = [];
 							parseSubNodes(node.childNodes, item);
 						}
-						current.items.push(item);					
+						if(item.drawable == 'a'){ //This is for handling the old A element
+							console.log('a element')
+							parseSubNodes(node.childNodes, current);
+						}else{	// otherwise just add featuers
+							current.items.push(item);
+						}					
 					}
 				}
 			}
