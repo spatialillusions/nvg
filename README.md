@@ -1,7 +1,7 @@
 # nvg
 Javascript library for Nato Vector Graphics
 
-![Sample Output on Open Layers Map](docs/sample.xml.png?raw=true)
+![Sample Output on Open Layers Map](docs/nvg.png?raw=true)
 
 ## About Nato Vector Graphics
 
